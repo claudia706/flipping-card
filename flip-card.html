@@ -32,44 +32,6 @@
       width: 100%;
     }
     
-    .upload-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    .upload-group label:first-child {
-      color: white;
-      font-weight: 500;
-      font-size: 14px;
-    }
-    
-    .upload-btn {
-      background: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 13px;
-      transition: transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-      display: inline-block;
-    }
-    
-    .upload-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-    }
-    
-    .upload-btn.loaded {
-      background: #4CAF50;
-      color: white;
-    }
-    
-    input[type="file"] {
-      display: none;
-    }
-    
     .flip-btn {
       background: linear-gradient(135deg, #ff6b6b, #ee5a24);
       color: white;
@@ -99,26 +61,19 @@
 </head>
 <body>
   <div class="controls">
-    <div class="upload-group">
-      <label>Front:</label>
-      <label class="upload-btn" id="front-label">
-        Choose File
-        <input type="file" id="front-input" accept="image/*">
-      </label>
-    </div>
-    <div class="upload-group">
-      <label>Back:</label>
-      <label class="upload-btn" id="back-label">
-        Choose File
-        <input type="file" id="back-input" accept="image/*">
-      </label>
-    </div>
     <button class="flip-btn" id="flip-btn">🔄 Flip</button>
   </div>
   
   <div id="canvas-container"></div>
 
   <script>
+    // ============================================
+    // SET YOUR IMAGE PATHS HERE
+    // ============================================
+    const FRONT_IMAGE_PATH = 'card_setup_3.png';
+    const BACK_IMAGE_PATH = 'Back_card.png';
+    // ============================================
+    
     // Card dimensions
     const CARD_WIDTH = 510;
     const CARD_HEIGHT = 672;
@@ -135,8 +90,6 @@
     // Graphics buffers for front and back
     let frontGraphics;
     let backGraphics;
-    let frontLoaded = false;
-    let backLoaded = false;
     
     function setup() {
       let canvas = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT, WEBGL);
@@ -146,75 +99,40 @@
       frontGraphics = createGraphics(CARD_WIDTH, CARD_HEIGHT);
       backGraphics = createGraphics(CARD_WIDTH, CARD_HEIGHT);
       
-      // Initialize with placeholder
-      drawPlaceholder(frontGraphics, "Front");
-      drawPlaceholder(backGraphics, "Back");
+      // Load the pre-set images
+      loadCardImage(FRONT_IMAGE_PATH, frontGraphics);
+      loadCardImage(BACK_IMAGE_PATH, backGraphics);
       
-      // Set up file inputs
-      document.getElementById('front-input').addEventListener('change', (e) => handleUpload(e, 'front'));
-      document.getElementById('back-input').addEventListener('change', (e) => handleUpload(e, 'back'));
+      // Set up flip button
       document.getElementById('flip-btn').addEventListener('click', flipCard);
     }
     
-    function drawPlaceholder(g, label) {
-      g.background(30);
-      g.fill(60);
-      g.noStroke();
-      g.rectMode(g.CENTER);
-      g.rect(g.width/2, g.height/2, g.width - 40, g.height - 40, 10);
-      g.fill(100);
-      g.textAlign(g.CENTER, g.CENTER);
-      g.textSize(24);
-      g.text("Upload " + label + " Image", g.width/2, g.height/2);
-    }
-    
-    function handleUpload(e, side) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-          const img = new Image();
-          img.onload = function() {
-            const g = side === 'front' ? frontGraphics : backGraphics;
-            
-            g.clear();
-            g.background(0);
-            
-            const imgAspect = img.width / img.height;
-            const cardAspect = CARD_WIDTH / CARD_HEIGHT;
-            
-            let drawWidth, drawHeight, offsetX, offsetY;
-            
-            if (imgAspect > cardAspect) {
-              drawHeight = CARD_HEIGHT;
-              drawWidth = drawHeight * imgAspect;
-              offsetX = (CARD_WIDTH - drawWidth) / 2;
-              offsetY = 0;
-            } else {
-              drawWidth = CARD_WIDTH;
-              drawHeight = drawWidth / imgAspect;
-              offsetX = 0;
-              offsetY = (CARD_HEIGHT - drawHeight) / 2;
-            }
-            
-            g.drawingContext.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
-            
-            if (side === 'front') {
-              frontLoaded = true;
-              document.getElementById('front-label').classList.add('loaded');
-              document.getElementById('front-label').innerHTML = '✓ Loaded<input type="file" id="front-input" accept="image/*">';
-              document.getElementById('front-input').addEventListener('change', (e) => handleUpload(e, 'front'));
-            } else {
-              backLoaded = true;
-              document.getElementById('back-label').classList.add('loaded');
-              document.getElementById('back-label').innerHTML = '✓ Loaded<input type="file" id="back-input" accept="image/*">';
-              document.getElementById('back-input').addEventListener('change', (e) => handleUpload(e, 'back'));
-            }
-          };
-          img.src = event.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
+    function loadCardImage(path, g) {
+      const img = new Image();
+      img.onload = function() {
+        g.clear();
+        g.background(0);
+        
+        const imgAspect = img.width / img.height;
+        const cardAspect = CARD_WIDTH / CARD_HEIGHT;
+        
+        let drawWidth, drawHeight, offsetX, offsetY;
+        
+        if (imgAspect > cardAspect) {
+          drawHeight = CARD_HEIGHT;
+          drawWidth = drawHeight * imgAspect;
+          offsetX = (CARD_WIDTH - drawWidth) / 2;
+          offsetY = 0;
+        } else {
+          drawWidth = CARD_WIDTH;
+          drawHeight = drawWidth / imgAspect;
+          offsetX = 0;
+          offsetY = (CARD_HEIGHT - drawHeight) / 2;
+        }
+        
+        g.drawingContext.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+      };
+      img.src = path;
     }
     
     function flipCard() {
