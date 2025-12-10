@@ -253,7 +253,7 @@
     
     function draw() {
       // Clear background
-      background(240, 240, 245);
+      background(0);
       
       // Reset material settings for clean rendering
       noLights();
@@ -268,15 +268,6 @@
           isFlipping = false;
         }
       }
-      
-      // Draw shadow first (behind everything)
-      push();
-      translate(10, 12, -5);
-      rotateY(flipAngle);
-      noStroke();
-      fill(0, 0, 0, 50);
-      plane(CARD_WIDTH, CARD_HEIGHT);
-      pop();
       
       // Determine which side is visible
       let normalizedAngle = ((flipAngle % TWO_PI) + TWO_PI) % TWO_PI;
