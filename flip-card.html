@@ -33,21 +33,19 @@
     }
     
     .flip-btn {
-      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      background: black;
       color: white;
-      border: none;
+      border: 1px solid white;
       padding: 10px 30px;
       border-radius: 25px;
       font-size: 15px;
       font-weight: bold;
       cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 3px 12px rgba(238, 90, 36, 0.4);
+      transition: transform 0.2s, opacity 0.2s;
     }
     
     .flip-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 20px rgba(238, 90, 36, 0.5);
+      opacity: 0.8;
     }
     
     .flip-btn:active {
@@ -61,7 +59,7 @@
 </head>
 <body>
   <div class="controls">
-    <button class="flip-btn" id="flip-btn">🔄 Flip</button>
+    <button class="flip-btn" id="flip-btn">Flip</button>
   </div>
   
   <div id="canvas-container"></div>
