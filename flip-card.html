@@ -100,20 +100,22 @@
     }
     
     function calculateScale() {
-      let maxWidth, maxHeight;
+      let maxWidth, maxHeight, padding;
       
       if (isMobile()) {
-        // On mobile: button is at bottom, so use more width and leave space at bottom
-        maxWidth = windowWidth - 20;
-        maxHeight = windowHeight - 100; // Space for button at bottom
+        // On mobile: tighter padding, button at bottom
+        padding = 80;
+        maxWidth = windowWidth - 10;
+        maxHeight = windowHeight - 80; // Space for button at bottom
       } else {
         // On desktop: button is on right side
-        maxWidth = windowWidth - 120; // Space for button on right
+        padding = PADDING;
+        maxWidth = windowWidth - 120;
         maxHeight = windowHeight - 40;
       }
       
-      const scaleX = maxWidth / (CARD_WIDTH + PADDING * 2);
-      const scaleY = maxHeight / (CARD_HEIGHT + PADDING * 2);
+      const scaleX = maxWidth / (CARD_WIDTH + padding * 2);
+      const scaleY = maxHeight / (CARD_HEIGHT + padding * 2);
       
       scaleFactor = min(scaleX, scaleY, 1); // Don't scale up, only down
     }
@@ -121,8 +123,9 @@
     function setup() {
       calculateScale();
       
-      let canvasW = (CARD_WIDTH + PADDING * 2) * scaleFactor;
-      let canvasH = (CARD_HEIGHT + PADDING * 2) * scaleFactor;
+      let padding = isMobile() ? 80 : PADDING;
+      let canvasW = (CARD_WIDTH + padding * 2) * scaleFactor;
+      let canvasH = (CARD_HEIGHT + padding * 2) * scaleFactor;
       
       let canvas = createCanvas(canvasW, canvasH, WEBGL);
       canvas.parent('canvas-container');
@@ -142,8 +145,9 @@
     function windowResized() {
       calculateScale();
       
-      let canvasW = (CARD_WIDTH + PADDING * 2) * scaleFactor;
-      let canvasH = (CARD_HEIGHT + PADDING * 2) * scaleFactor;
+      let padding = isMobile() ? 80 : PADDING;
+      let canvasW = (CARD_WIDTH + padding * 2) * scaleFactor;
+      let canvasH = (CARD_HEIGHT + padding * 2) * scaleFactor;
       
       resizeCanvas(canvasW, canvasH);
     }
