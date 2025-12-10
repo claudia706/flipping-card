@@ -29,12 +29,7 @@
       flex-wrap: wrap;
       justify-content: center;
       align-items: center;
-      background: #000;
       width: 100%;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 100;
     }
     
     .upload-group {
@@ -97,10 +92,6 @@
       transform: translateY(0);
     }
     
-    #canvas-container {
-      margin-top: 80px;
-    }
-    
     #canvas-container canvas {
       display: block;
     }
@@ -132,9 +123,9 @@
     const CARD_WIDTH = 510;
     const CARD_HEIGHT = 672;
     
-    // Canvas needs extra width for the 3D rotation
-    const CANVAS_WIDTH = CARD_WIDTH + 200;
-    const CANVAS_HEIGHT = CARD_HEIGHT;
+    // Canvas needs extra space for the 3D rotation perspective
+    const CANVAS_WIDTH = CARD_WIDTH + 300;
+    const CANVAS_HEIGHT = CARD_HEIGHT + 300;
     
     // Animation state
     let flipAngle = 0;
